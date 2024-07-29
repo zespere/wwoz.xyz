@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import ArrowCard from "@components/ArrowCard.astro";
+import Button from "@components/Button.astro"
 import { BLOG } from "@consts";
 
 const data = (await getCollection("blog"))
@@ -21,8 +22,12 @@ const posts = data.reduce((acc: Acc, post) => {
     acc[year].push(post);
     return acc;
   }, {});
-
 const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+
+let selectedLang = "en";
+let selectedTags = []
+const languages = Array.from(new Set(data.map(post => post.data.lang)));
+const tags = Array.from(new Set(data.map(post => post.data.tags)));
 ---
 
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
@@ -31,6 +36,24 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
       <div class="animate font-semibold text-black dark:text-white">
         Blog
       </div>
+      <div class="animate">
+      <div class="pb-4">
+        Languages <br /><br />
+        <ul>
+          {languages.map((lang) => (
+            <li><Button text={lang} /></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        Tags<br /><br />
+        <ul>
+          {languages.map((lang) => (
+            <li><Button text={lang} /></li>
+          ))}
+        </ul>
+      </div>
+    </div>
       <div class="space-y-4">
         {years.map(year => (
           <section class="animate space-y-4">
