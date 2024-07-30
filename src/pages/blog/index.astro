@@ -25,7 +25,6 @@ const posts = data.reduce((acc: Acc, post) => {
   }, {});
 const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
 
-let selectedLang = "en";
 const languages = Array.from(new Set(data.map(post => post.data.lang)));
 const tags = Array.from(new Set(data.map(post => post.data.tags)));
 ---
@@ -36,19 +35,16 @@ const tags = Array.from(new Set(data.map(post => post.data.tags)));
       <div class="animate font-semibold text-black dark:text-white">
         Blog
       </div>
+         
       <div class="animate">
-      <div class="pb-4">
-        Languages <br /><br />
-          {languages.map((lang) => (
-            <Button text={lang} class="mr-2" />
-          ))}
-      </div>
-      <div>
-        Tags<br /><br />
+        Tags<br /><br /> <Button 
+            text="All" 
+            href="#" 
+            class='bg-gray-200 dark:bg-gray-700 mr-2'
+          />
           {allTags.map((tag) => (
             <Button text={tag.data.name} href={`/tags/${tag.id}`} class="mr-2"/>
           ))}
-      </div>
     </div>
       <div class="space-y-4">
         {years.map(year => (

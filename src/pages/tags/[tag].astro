@@ -2,8 +2,8 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import BackToPrev from "@components/BackToPrev.astro";
 import ArrowCard from "@components/ArrowCard.astro";
+import Button from "@components/Button.astro";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -28,30 +28,67 @@ interface Props {
 
 const { tag } = Astro.params;
 const { tagData, posts } = Astro.props;
+
+const allTags = await getCollection('tags');
+
+type Acc = {
+  [year: string]: CollectionEntry<"blog">[];
+}
+
+const postsByYear = posts.reduce((acc: Acc, post) => {
+  const year = post.data.date.getFullYear().toString();
+  if (!acc[year]) {
+    acc[year] = [];
+  }
+  acc[year].push(post);
+  return acc;
+}, {});
+
+const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
 ---
-<PageLayout title={tag} description={tagData.description || `Posts tagged with ${tagData.name}`}>
+<PageLayout title={tagData.name} description={tagData.description || `Posts tagged with ${tagData.name}`}>
   <Container>
-    <div class="animate mb-4">
-      <BackToPrev href="/blog">
-        Back to blog
-      </BackToPrev>
-    </div>
-    <div class="animate">
-      <h1 class="text-2xl font-bold">{tagData.name} (tag)</h1>
-      {tagData.description && <p>{tagData.description}</p>}
-      {posts.length > 0 ? (
-        <ul class="mt-4 space-y-2">
-          {posts.map(post => (
-            <li>
-              <a href={`/blog/${post.slug}`} class="hover:underline">
-                {post.data.title}
-              </a>
-            </li>
+    <div class="space-y-10">
+      <div class="animate font-semibold text-black dark:text-white">
+        {tagData.name}
+      </div>
+      <div class="animate">
+        <div>
+          Tags<br /><br />
+          <Button 
+            text="All" 
+            href="/blog" 
+            class={`mr-2 ${!tag ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
+          />
+          {allTags.map((t) => (
+            <Button 
+              text={t.data.name} 
+              href={`/tags/${t.id}`} 
+              class={`mr-2 ${t.id === tag ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
+            />
           ))}
-        </ul>
-      ) : (
-        <p class="mt-4">No posts found with this tag.</p>
-      )}
+        </div>
+      </div>
+      <div class="space-y-4">
+        {years.map(year => (
+          <section class="animate space-y-4">
+            <div class="font-semibold text-black dark:text-white">
+              {year}
+            </div>
+            <div>
+              <ul class="flex flex-col gap-4">
+                {
+                  postsByYear[year].map((post) => (
+                    <li>
+                      <ArrowCard entry={post}/>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </section>
+        ))}
+      </div>
     </div>
   </Container>
 </PageLayout>
