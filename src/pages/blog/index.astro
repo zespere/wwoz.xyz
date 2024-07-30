@@ -10,6 +10,7 @@ const data = (await getCollection("blog"))
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   
+const allTags = await getCollection('tags');
 type Acc = {
   [year: string]: CollectionEntry<"blog">[];
 }
@@ -25,7 +26,6 @@ const posts = data.reduce((acc: Acc, post) => {
 const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
 
 let selectedLang = "en";
-let selectedTags = []
 const languages = Array.from(new Set(data.map(post => post.data.lang)));
 const tags = Array.from(new Set(data.map(post => post.data.tags)));
 ---
@@ -39,19 +39,15 @@ const tags = Array.from(new Set(data.map(post => post.data.tags)));
       <div class="animate">
       <div class="pb-4">
         Languages <br /><br />
-        <ul>
           {languages.map((lang) => (
-            <li><Button text={lang} /></li>
+            <Button text={lang} class="mr-2" />
           ))}
-        </ul>
       </div>
       <div>
         Tags<br /><br />
-        <ul>
-          {languages.map((lang) => (
-            <li><Button text={lang} /></li>
+          {allTags.map((tag) => (
+            <Button text={tag.data.name} href={`/tags/${tag.id}`} class="mr-2"/>
           ))}
-        </ul>
       </div>
     </div>
       <div class="space-y-4">

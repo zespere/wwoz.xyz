@@ -2,7 +2,7 @@
 title: "Zorganizowane myślenie"
 description: 'Czego dowiedziałem się z książki "Getting Real" odnośnie myślenia.'
 date: "8 June 2024"
-tags: []
+tags: ["philosophy"]
 lang: "en"
 ---
 

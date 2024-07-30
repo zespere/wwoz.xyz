@@ -2,8 +2,8 @@
 title: "Zorganizowane myślenie"
 description: 'Czego dowiedziałem się z książki "Getting Real" odnośnie myślenia.'
 date: "8 June 2024"
-tags: []
-lang: "en"
+tags: ["philosophy"]
+lang: "pl"
 ---
 
 W książce "Getting Real" napisanej przez pracowników firmy basecamp na 77 stronie możemy przeczytać o wadze zatrudniania dobrych pisarzy, jest tam napisane że najważniejszą zdolnością pracownika jest zdolność wydajnego i zwięzłego pisania bowiem skutkuje ona poprawieniem pisania kodu, komunikacji, design'u i innych.

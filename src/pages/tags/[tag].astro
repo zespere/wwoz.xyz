@@ -1,0 +1,57 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import BackToPrev from "@components/BackToPrev.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const [allTags, allPosts] = await Promise.all([
+    getCollection('tags'),
+    getCollection("blog")
+  ]);
+
+  return allTags.map((tagEntry) => ({
+    params: { tag: tagEntry.id },
+    props: { 
+      tagData: tagEntry.data,
+      posts: allPosts.filter(post => post.data.tags?.includes(tagEntry.id))
+    }
+  }));
+};
+
+interface Props {
+  tagData: CollectionEntry<"tags">["data"];
+  posts: CollectionEntry<"blog">[];
+}
+
+const { tag } = Astro.params;
+const { tagData, posts } = Astro.props;
+---
+<PageLayout title={tag} description={tagData.description || `Posts tagged with ${tagData.name}`}>
+  <Container>
+    <div class="animate mb-4">
+      <BackToPrev href="/blog">
+        Back to blog
+      </BackToPrev>
+    </div>
+    <div class="animate">
+      <h1 class="text-2xl font-bold">{tagData.name} (tag)</h1>
+      {tagData.description && <p>{tagData.description}</p>}
+      {posts.length > 0 ? (
+        <ul class="mt-4 space-y-2">
+          {posts.map(post => (
+            <li>
+              <a href={`/blog/${post.slug}`} class="hover:underline">
+                {post.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="mt-4">No posts found with this tag.</p>
+      )}
+    </div>
+  </Container>
+</PageLayout>

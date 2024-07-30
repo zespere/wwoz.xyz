@@ -1,11 +1,12 @@
 ---
 interface Props {
   text: string;
+  class?: string;
+  href?: string;
 }
 
-const { text } = Astro.props;
+const { text, class: className, href } = Astro.props;
 ---
-
-<button class="rounded-lg border border-black/15 dark:border-white/20 p-2">
+<a class={`rounded-lg border border-black/15 dark:border-white/20 p-2 dark:hover:bg-neutral-800 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out ${className || ''}`} {...href ? { href } : {}}>
   {text}
-</button>
+</a>

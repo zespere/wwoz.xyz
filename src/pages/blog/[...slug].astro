@@ -5,6 +5,7 @@ import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
+import Button from "@components/Button.astro"
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
@@ -41,6 +42,13 @@ const { Content } = await post.render();
       <div class="animate text-2xl font-semibold text-black dark:text-white">
         {post.data.title}
       </div>
+      {post.data.tags && (
+        <div class="animate flex flex-wrap gap-2 mt-2">
+          {post.data.tags.map((tag) => (
+            <Button text={tag} class="p-1 text-sm" href={`/tags/${tag}`} />
+          ))}
+        </div>
+      )}
     </div>
     <article class="animate">
       <Content />
